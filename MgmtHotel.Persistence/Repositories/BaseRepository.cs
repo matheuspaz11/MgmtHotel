@@ -7,39 +7,48 @@ namespace MgmtHotel.Persistence.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        protected readonly AppDbContext Context;
+        protected readonly AppDbContext _context;
 
         public BaseRepository(AppDbContext appDbContext)
         {
-            Context = appDbContext;
+            _context = appDbContext;
         }
 
-        public void Create(T entity)
+        public Task Create(T entity)
         {
             entity.CreateDate = DateTime.Now;
-            Context.Add(entity);
+            _context.Add(entity);
+            _context.SaveChangesAsync();
+
+            return Task.CompletedTask;
         }
 
-        public void Delete(T entity)
+        public Task Delete(T entity)
         {
             entity.DeletionDate = DateTime.Now;
-            Context.Remove(entity);
+            _context.Remove(entity);
+            _context.SaveChangesAsync();
+
+            return Task.CompletedTask;
         }
 
-        public async Task<T> Get(int id, CancellationToken cancellationToken)
+        public async Task<T> Get(int id)
         {
-            return await Context.Set<T>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<T>> GetAll(CancellationToken cancellationToken)
+        public async Task<List<T>> GetAll()
         {
-            return await Context.Set<T>().ToListAsync(cancellationToken);
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public void Update(T entity)
+        public Task Update(T entity)
         {
             entity.UpdateDate = DateTime.Now;
-            Context.Update(entity);
+            _context.Update(entity);
+            _context.SaveChangesAsync();
+
+            return Task.CompletedTask;
         }
     }
 }

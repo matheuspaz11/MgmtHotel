@@ -4,14 +4,14 @@ namespace MgmtHotel.Domain.Interfaces
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {
-        void Create(T entity);
+        Task Create(T entity);
 
-        void Update(T entity);
+        Task Update(T entity);
 
-        void Delete(T entity);
+        Task Delete(T entity);
 
-        Task<T> Get(int id, CancellationToken cancellationToken);
+        Task<T> Get(int id);
 
-        Task<List<T>> GetAll(CancellationToken cancellationToken);
+        Task<List<T>> GetAll();
     }
 }

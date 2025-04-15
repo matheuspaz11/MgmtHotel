@@ -1,4 +1,12 @@
 
+using MgmtHotel.Application.Interfaces;
+using MgmtHotel.Application.Mappings;
+using MgmtHotel.Application.Services;
+using MgmtHotel.Domain.Interfaces;
+using MgmtHotel.Persistence.Context;
+using MgmtHotel.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 namespace WebApiMgmtHotel
 {
     public class Program
@@ -13,6 +21,13 @@ namespace WebApiMgmtHotel
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionSqlServer")));
+
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
             var app = builder.Build();
 

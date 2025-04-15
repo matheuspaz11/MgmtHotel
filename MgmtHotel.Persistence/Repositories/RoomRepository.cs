@@ -9,9 +9,9 @@ namespace MgmtHotel.Persistence.Repositories
     {
         public RoomRepository(AppDbContext appDbContext) : base(appDbContext) {}
 
-        public async Task<Room> GetRoomByNumber(string numberRoom, CancellationToken cancellationToken )
+        public async Task<Room> GetRoomByNumber(string numberRoom)
         {
-            return await Context.Rooms.FirstOrDefaultAsync(x => x.RoomNumber == numberRoom, cancellationToken);
+            return await _context.Rooms.FirstOrDefaultAsync(x => x.RoomNumber == numberRoom);
         }
     }
 }
