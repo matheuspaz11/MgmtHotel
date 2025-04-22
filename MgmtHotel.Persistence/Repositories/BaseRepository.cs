@@ -17,6 +17,8 @@ namespace MgmtHotel.Persistence.Repositories
         public Task Create(T entity)
         {
             entity.CreateDate = DateTime.Now;
+            entity.UpdateDate = DateTime.Now;
+
             _context.Add(entity);
             _context.SaveChangesAsync();
 

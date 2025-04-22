@@ -8,6 +8,6 @@
 
         public DateTime UpdateDate { get; set; }
 
-        public DateTime DeletionDate { get; set; }
+        public DateTime? DeletionDate { get; set; } = null;
     }
 }

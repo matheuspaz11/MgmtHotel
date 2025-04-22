@@ -33,6 +33,11 @@ namespace MgmtHotel.Application.Services
         public async Task Insert(RoomDTO roomDTO)
         {
             var room = _mapper.Map<Room>(roomDTO);
+            var returnRoom = await _roomRepository.GetRoomByNumber(room.RoomNumber);
+
+            if(returnRoom != null)
+                throw new Exception("Quarto já existe na base de dados.");
+
             await _roomRepository.Create(room);
         }
 

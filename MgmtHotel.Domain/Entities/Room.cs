@@ -1,8 +1,10 @@
-﻿namespace MgmtHotel.Domain.Entities
+﻿using MgmtHotel.Domain.Entities.Enum;
+
+namespace MgmtHotel.Domain.Entities
 {
     public sealed class Room : BaseEntity
     {
-        public string RoomNumber { get; set; } = string.Empty;
+        public string RoomNumber { get; set; }
 
         public int NumberOccupants { get; set; }
 
@@ -14,6 +16,8 @@
 
         public bool RoomFull { get; set; }
 
-        public char BedType { get; set; }
+        public BetType BedType { get; set; }
+
+        public string? Observation { get; set; } = string.Empty;
     }
 }
