@@ -11,7 +11,7 @@ namespace MgmtHotel.Persistence.Repositories
 
         public async Task<Room> GetRoomByNumber(string numberRoom)
         {
-            return await _context.Rooms.FirstOrDefaultAsync(x => x.RoomNumber == numberRoom);
+            return await _context.Rooms.FirstOrDefaultAsync(x => x.RoomNumber == numberRoom && x.DeletionDate == null);
         }
     }
 }

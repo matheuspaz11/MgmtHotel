@@ -28,7 +28,7 @@ namespace MgmtHotel.Persistence.Repositories
         public Task Delete(T entity)
         {
             entity.DeletionDate = DateTime.Now;
-            _context.Remove(entity);
+            _context.Update(entity);
             _context.SaveChangesAsync();
 
             return Task.CompletedTask;
@@ -36,7 +36,7 @@ namespace MgmtHotel.Persistence.Repositories
 
         public async Task<T> Get(int id)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id && x.DeletionDate == null);
         }
 
         public async Task<List<T>> GetAll()
