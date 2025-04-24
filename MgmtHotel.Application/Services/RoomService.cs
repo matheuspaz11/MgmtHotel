@@ -20,25 +20,48 @@ namespace MgmtHotel.Application.Services
 
         public async Task Update(RoomDTO roomDTO)
         {
-            var room = _mapper.Map<Room>(roomDTO);
-            await _roomRepository.Update(room);
+            try
+            {
+                var room = _mapper.Map<Room>(roomDTO);
+
+                await _roomRepository.Update(room);
+            }
+            catch (Exception) 
+            {
+                throw;
+            }
         }
 
         public async Task Delete(int id)
         {
-            var room = await _roomRepository.Get(id);
-            await _roomRepository.Delete(room);
+            try
+            {
+                var room = await _roomRepository.Get(id);
+
+                await _roomRepository.Delete(room);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task Insert(RoomDTO roomDTO)
         {
-            var room = _mapper.Map<Room>(roomDTO);
-            var returnRoom = await _roomRepository.GetRoomByNumber(room.RoomNumber);
+            try
+            {
+                var room = _mapper.Map<Room>(roomDTO);
+                var returnRoom = await _roomRepository.GetRoomByNumber(room.RoomNumber);
 
-            if(returnRoom != null)
-                throw new Exception("Quarto já existe na base de dados.");
+                if (returnRoom != null)
+                    throw new Exception("Quarto já existe na base de dados.");
 
-            await _roomRepository.Create(room);
+                await _roomRepository.Create(room);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<RoomDTO> GetAsync(int id)

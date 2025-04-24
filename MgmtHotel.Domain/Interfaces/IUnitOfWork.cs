@@ -2,6 +2,12 @@
 {
     public interface IUnitOfWork
     {
-        Task Commit(CancellationToken cancellationToken);
+        Task SaveAsync();
+
+        Task BeginTransactionAsync();
+
+        Task CommitTransactionAsync();
+
+        Task RoolbackTransactionAsync();
     }
 }

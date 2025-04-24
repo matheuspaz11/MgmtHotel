@@ -9,29 +9,55 @@ namespace MgmtHotel.Persistence.Repositories
     {
         protected readonly AppDbContext _context;
 
-        public BaseRepository(AppDbContext appDbContext)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public BaseRepository(AppDbContext appDbContext, IUnitOfWork unitOfWork)
         {
             _context = appDbContext;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task Create(T entity)
+        public async Task Create(T entity)
         {
-            entity.CreateDate = DateTime.Now;
-            entity.UpdateDate = DateTime.Now;
+            try
+            {
+                entity.CreateDate = DateTime.Now;
+                entity.UpdateDate = DateTime.Now;
 
-            _context.Add(entity);
-            _context.SaveChangesAsync();
+                await _unitOfWork.BeginTransactionAsync();
 
-            return Task.CompletedTask;
+                _context.Add(entity);
+
+                await _unitOfWork.SaveAsync();
+
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception) 
+            {
+                await _unitOfWork.RoolbackTransactionAsync();
+                throw;
+            }
         }
 
-        public Task Delete(T entity)
+        public async Task Delete(T entity)
         {
-            entity.DeletionDate = DateTime.Now;
-            _context.Update(entity);
-            _context.SaveChangesAsync();
+            try
+            {
+                entity.DeletionDate = DateTime.Now;
+                
+                await _unitOfWork.BeginTransactionAsync();
 
-            return Task.CompletedTask;
+                _context.Update(entity);
+
+                await _unitOfWork.SaveAsync();
+                
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception) 
+            {
+                await _unitOfWork.RoolbackTransactionAsync();
+                throw;
+            }
         }
 
         public async Task<T> Get(int id)
@@ -44,13 +70,25 @@ namespace MgmtHotel.Persistence.Repositories
             return await _context.Set<T>().ToListAsync();
         }
 
-        public Task Update(T entity)
+        public async Task Update(T entity)
         {
-            entity.UpdateDate = DateTime.Now;
-            _context.Update(entity);
-            _context.SaveChangesAsync();
+            try
+            {
+                entity.UpdateDate = DateTime.Now;
+                
+                await _unitOfWork.BeginTransactionAsync();
 
-            return Task.CompletedTask;
+                _context.Update(entity);
+
+                await _unitOfWork.SaveAsync();
+
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception) 
+            {
+                await _unitOfWork.RoolbackTransactionAsync();
+                throw;
+            }
         }
     }
 }

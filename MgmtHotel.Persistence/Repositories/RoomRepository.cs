@@ -7,7 +7,7 @@ namespace MgmtHotel.Persistence.Repositories
 {
     public class RoomRepository : BaseRepository<Room>, IRoomRepository
     {
-        public RoomRepository(AppDbContext appDbContext) : base(appDbContext) {}
+        public RoomRepository(AppDbContext appDbContext, IUnitOfWork unitOfWork) : base(appDbContext, unitOfWork) {}
 
         public async Task<Room> GetRoomByNumber(string numberRoom)
         {
