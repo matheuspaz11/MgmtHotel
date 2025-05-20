@@ -6,6 +6,9 @@ namespace MgmtHotel.Application.DTOs
 {
     public class RoomDTO
     {
+        [JsonPropertyName("Identity")]
+        public int Id { get; set; }
+
         [JsonPropertyName("RoomNumber")]
         [Required(ErrorMessage = "O número do quarto é obrigatório")]
         [StringLength(3, ErrorMessage = "O número do quarto deve ter no máximo 3 dígitos")]
@@ -33,7 +36,7 @@ namespace MgmtHotel.Application.DTOs
         [JsonPropertyName("BedType")]
         [Required(ErrorMessage = "O campo tipo de cama é obrigatório")]
         [Range(0, 2, ErrorMessage = "O tipo de cama deve ser 0 (Casal), 1 (Solteiro) ou 2 (Beliche).")]
-        public BetType BedType { get; set; }
+        public BedType BedType { get; set; }
 
         [JsonPropertyName("Observation")]
         [MaxLength(100, ErrorMessage = "O campo observação deve ter no máximo 100 dígitos")]

@@ -3,7 +3,6 @@ using MgmtHotel.Application.DTOs;
 using MgmtHotel.Application.Interfaces;
 using MgmtHotel.Domain.Entities;
 using MgmtHotel.Domain.Interfaces;
-using MgmtHotel.Domain.Pagination;
 
 namespace MgmtHotel.Application.Services
 {
@@ -18,13 +17,21 @@ namespace MgmtHotel.Application.Services
             _mapper = mapper;
         }
 
-        public async Task Update(RoomDTO roomDTO)
+        public async Task<RoomDTO> Update(RoomUpdateDTO roomUpdateDTO, RoomDTO roomDTO)
         {
             try
             {
+                roomDTO.NumberOccupants = roomUpdateDTO.NumberOccupants ?? roomDTO.NumberOccupants;
+                roomDTO.AdditionalBed = roomUpdateDTO.AdditionalBed ?? roomDTO.AdditionalBed;
+                roomDTO.RoomFull = roomUpdateDTO.RoomFull ?? roomDTO.RoomFull;
+                roomDTO.BedType = roomUpdateDTO.BedType ?? roomDTO.BedType;
+                roomDTO.Observation = string.IsNullOrEmpty(roomUpdateDTO.Observation) ? roomDTO.Observation : roomUpdateDTO.Observation;
+
                 var room = _mapper.Map<Room>(roomDTO);
 
                 await _roomRepository.Update(room);
+
+                return roomDTO;
             }
             catch (Exception) 
             {
@@ -72,14 +79,13 @@ namespace MgmtHotel.Application.Services
             return roomDTO;
         }
 
-        public Task<PagedList<RoomDTO>> GetByFilterAsync(string termo, int pageNumber, int pageSize)
+        public async Task<List<RoomDTO>> GetPagedRoomsAsync(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
-        }
+            var pagedRooms = await _roomRepository.GetRoomsByPage(pageNumber, pageSize);
 
-        public Task<PagedList<RoomDTO>> GetAllAsync(int pageNumber, int pageSize)
-        {
-            throw new NotImplementedException();
+            var roomDTOs = _mapper.Map<List<RoomDTO>>(pagedRooms);
+
+            return roomDTOs;
         }
     }
 }

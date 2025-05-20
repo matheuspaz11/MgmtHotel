@@ -1,6 +1,6 @@
 ﻿namespace MgmtHotel.Domain.Entities.Enum
 {
-    public enum BetType
+    public enum BedType
     {
         DoubleBed = 0,
         SingleBed = 1,

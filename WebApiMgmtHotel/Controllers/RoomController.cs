@@ -10,7 +10,7 @@ namespace MgmtHotel.WebApi.Controllers
     {
         private readonly IRoomService _roomService;
 
-        public RoomController(IRoomService roomService) 
+        public RoomController(IRoomService roomService)
         {
             _roomService = roomService;
         }
@@ -27,9 +27,9 @@ namespace MgmtHotel.WebApi.Controllers
 
                 return Ok(new { message = "Quarto inserido com sucesso!" });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                return BadRequest( new { message = ex.Message });
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -38,18 +38,18 @@ namespace MgmtHotel.WebApi.Controllers
         {
             try
             {
-                if(id == 0)
+                if (id == 0)
                     return BadRequest(new { message = "Id deve ser maior que zero" });
 
                 var room = await _roomService.GetAsync(id);
 
-                if(room == null)
+                if (room == null)
                     return BadRequest(new { message = "Quarto não encontrado" });
 
                 return Ok(room);
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
@@ -65,12 +65,53 @@ namespace MgmtHotel.WebApi.Controllers
 
                 var room = await _roomService.GetAsync(id);
 
-                if(room == null)
+                if (room == null)
                     return BadRequest(new { message = "Quarto não encontrado" });
 
                 await _roomService.Delete(id);
 
                 return Ok(new { message = "Quarto excluído com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPatch]
+        public async Task<ActionResult> Update([FromQuery]int id, [FromBody] RoomUpdateDTO roomUpdateDTO)
+        {
+            try
+            {
+                if (id == 0)
+                    return BadRequest(new { message = "Id deve ser maior que zero." });
+
+                var room = await _roomService.GetAsync(id);
+
+                if (room == null)
+                    return NotFound(new { message = "Quarto não encontrado." });
+
+                var roomUpdated = await _roomService.Update(roomUpdateDTO, room);
+
+                return Ok(new { message = "Quarto atualizado com sucesso.", roomUpdated });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("PagedRooms")]
+        public async Task<ActionResult> GetPagedRooms([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            try
+            {
+                var rooms = await _roomService.GetPagedRoomsAsync(pageNumber, pageSize);
+
+                if (rooms == null)
+                    return BadRequest(new { message = "Nenhum quarto encontrado." });
+
+                return Ok(rooms);
             }
             catch (Exception ex)
             {

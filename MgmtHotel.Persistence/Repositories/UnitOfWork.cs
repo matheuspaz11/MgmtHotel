@@ -35,7 +35,7 @@ namespace MgmtHotel.Persistence.Repositories
             }
         }
 
-        public async Task RoolbackTransactionAsync()
+        public async Task RollbackTransactionAsync()
         {
             if( _transaction != null)
             {

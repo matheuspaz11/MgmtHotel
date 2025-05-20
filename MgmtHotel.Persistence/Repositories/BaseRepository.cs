@@ -34,7 +34,7 @@ namespace MgmtHotel.Persistence.Repositories
             }
             catch (Exception) 
             {
-                await _unitOfWork.RoolbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync();
                 throw;
             }
         }
@@ -55,19 +55,28 @@ namespace MgmtHotel.Persistence.Repositories
             }
             catch (Exception) 
             {
-                await _unitOfWork.RoolbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync();
                 throw;
             }
         }
 
         public async Task<T> Get(int id)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id && x.DeletionDate == null);
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.DeletionDate == null);
         }
 
         public async Task<List<T>> GetAll()
         {
             return await _context.Set<T>().ToListAsync();
+        }
+
+        public async Task<List<T>> GetRoomsByPage(int numberPage, int pageSize)
+        {
+            return await _context.Set<T>()
+                .Where(x => x.DeletionDate == null)
+                .Skip((numberPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task Update(T entity)
@@ -80,13 +89,15 @@ namespace MgmtHotel.Persistence.Repositories
 
                 _context.Update(entity);
 
+                _context.Entry(entity).Property(e => e.CreateDate).IsModified = false;
+
                 await _unitOfWork.SaveAsync();
 
                 await _unitOfWork.CommitTransactionAsync();
             }
             catch (Exception) 
             {
-                await _unitOfWork.RoolbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync();
                 throw;
             }
         }

@@ -13,5 +13,7 @@ namespace MgmtHotel.Domain.Interfaces
         Task<T> Get(int id);
 
         Task<List<T>> GetAll();
+
+        Task<List<T>> GetRoomsByPage(int numberPage, int pageSize);
     }
 }

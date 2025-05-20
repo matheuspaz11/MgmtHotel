@@ -8,6 +8,6 @@
 
         Task CommitTransactionAsync();
 
-        Task RoolbackTransactionAsync();
+        Task RollbackTransactionAsync();
     }
 }
